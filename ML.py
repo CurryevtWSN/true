@@ -12,8 +12,8 @@ st.set_page_config(page_title='Pred hypertension in  patients with OSA')
 st.title('Prediction Model of Obstructive Sleep Apnea-related Hypertension: Machine Learning–Based Development and Interpretation Study')
 
 st.sidebar.markdown('## Variables')
-BQL = st.sidebar.selectbox('Berlin Questionnaire',('Low risk','High risk'),index=1)
-SBSL = st.sidebar.selectbox('STOP-Bang questionnaire',('Low risk','High risk'),index=1)
+#BQL = st.sidebar.selectbox('Berlin Questionnaire',('Low risk','High risk'),index=1)
+#SBSL = st.sidebar.selectbox('STOP-Bang questionnaire',('Low risk','High risk'),index=1)
 HHD = st.sidebar.selectbox('Heart disease',('No','Yes'),index=1)
 FHH = st.sidebar.selectbox('Family history of hypertension',('No','Yes'),index=0)
 diabetes = st.sidebar.selectbox('Diabetes',('No','Yes'),index=0)
@@ -46,36 +46,18 @@ st.sidebar.markdown('#  ')
 st.sidebar.markdown('##### All rights reserved') 
 st.sidebar.markdown('##### For communication and cooperation, please contact wshinana99@163.com, Wu Shi-Nan, Nanchang university')
 #传入数据
-map = {'No':0,'Yes':1,'Low risk':0,'High risk':1}
+map = {'No':0,'Yes':1}
 # X_data = new_data[["BQL","SBSL","HHD","FHH","diabetes","memory","HSD","PS","EM","stress","gender"
 #              ,"age","BMI","waistline","NC","DrT","SmT","SmA","SnT","SnT","ESS","SBS","AHI",
 #              "OAHI","minP","P90"]]
-BQL =map[BQL]
-SBSL =map[SBSL]
+#BQL =map[BQL]
+#SBSL =map[SBSL]
 HHD =map[HHD]
 FHH =map[FHH]
 diabetes =map[diabetes]
 memory =map[memory]
 HSD =map[HSD]
 PS =map[PS]
-# EM =map[EM]
-# stress =map[stress]
-# gender =map[gender]
-# age =map[age]
-# BMI =map[BMI]
-# waistline =map[waistline]
-# NC =map[NC]
-# DrT =map[DrT]
-# SmT =map[SmT]
-# SmA =map[SmA]
-# SnT =map[SnT]
-# SuT =map[SuT]
-# ESS =map[ESS]
-# SBS =map[SBS]
-# AHI =map[AHI]
-# OAHI =map[OAHI]
-# minP =map[minP]
-# P90 =map[P90]
 
 
 # 数据读取，特征标注
@@ -83,13 +65,11 @@ hp_train = pd.read_csv('data_new.csv')
 
 hp_train['hypertension'] = hp_train['hypertension'].apply(lambda x : +1 if x==1 else 0)
 
-features = ["BQL", "SBSL", "HHD", "FHH", "diabetes", "memory", "HSD", "PS", "BMI",
+features = ["HHD", "FHH", "diabetes", "memory", "HSD", "PS", "BMI",
                    "waistline", "NC", "SmA", "SnT", "SuT", "ESS", "AHI",
                    "OAL", "ageper10", "minPper10", "P90per10"]
 target = 'hypertension'
 random_state_new = 1000
-# ros = RandomOverSampler(random_state=random_state_new, sampling_strategy='auto')
-# X_ros, y_ros = ros.fit_resample(hp_train[features], hp_train[target])
 X_ros = np.array(hp_train[features])
 y_ros = np.array(hp_train[target])
 gbm = GradientBoostingClassifier(n_estimators=100, learning_rate=1, max_depth=1, random_state=random_state_new)
@@ -99,9 +79,9 @@ gbm.fit(X_ros, y_ros)
 
 sp = 0.5
 #figure
-is_t = (gbm.predict_proba(np.array([[BQL,SBSL,HHD,FHH,diabetes,memory,HSD,PS,
+is_t = (gbm.predict_proba(np.array([[HHD,FHH,diabetes,memory,HSD,PS,
                                      BMI,waistline,NC,SmA,SnT,SuT,ESS,AHI,OAL,ageper10,minPper10,P90per10]]))[0][1])> sp
-prob = (gbm.predict_proba(np.array([[BQL,SBSL,HHD,FHH,diabetes,memory,HSD,PS,
+prob = (gbm.predict_proba(np.array([[HHD,FHH,diabetes,memory,HSD,PS,
                                      BMI,waistline,NC,SmA,SnT,SuT,ESS,AHI,OAL,ageper10,minPper10,P90per10
                                      ]]))[0][1])*1000//1/10
 
